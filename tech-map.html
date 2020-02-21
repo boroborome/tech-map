@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="categories.js"></script>
+       <script type="text/javascript" src="edges.js"></script>
+       <script type="text/javascript" src="nodes.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+myChart.showLoading();
+
+
+// var xobj = new XMLHttpRequest();
+// xobj.overrideMimeType("application/json");
+// xobj.open('GET', 'webkit-dep.json', true);
+// xobj.onreadystatechange = function() {
+//     if (xobj.readyState != 4 || xobj.status != "200") {
+//         return;
+//     }
+    
+//     webkitDep = JSON.parse(xobj.responseText);
+    myChart.hideLoading();
+
+    nodeMap = new Map();
+    graphData = nodes.map(function (node, idx) {
+                node.id = node.name;
+                // nodeMap.set(node.name, node);
+                return node;
+            });
+
+    // graphLinks = edges.map(function (edge, idx) {
+    //     source = nodeMap.get(edge.sn);
+    //     target = nodeMap.get(edge.tn);
+
+    //     edge.source = source?.id;
+    //     edge.target = target?.id;
+    //     return edge;
+    // });
+    option = {
+        legend: {
+            data: ['HTMLElement', 'WebGL', 'SVG', 'CSS', 'Other']
+        },
+        series: [{
+            type: 'graph',
+            layout: 'force',
+            animation: false,
+            label: {
+                show: true,
+                position: 'right',
+                formatter: '{b}'
+            },
+            draggable: true,
+            data: graphData,
+            categories: categories,
+            force: {
+                edgeLength: 50,
+                repulsion: 200,
+                gravity: 0.2
+            },
+            edgeSymbol: ['none', 'arrow'],
+            links: edges
+        }]
+    };
+
+    myChart.setOption(option);
+// };
+// xobj.send(null);
+// if (option && typeof option === "object") {
+//     myChart.setOption(option, true);
+// }
+       </script>
+   </body>
+</html>
