@@ -1,13 +1,6 @@
 var nodes = [
     {
-        name: 'Java',
-        x: 100,
-        y: 100,
-        value: 20,
-        symbolSize: 20,
-        itemStyle: {
-            color: 'red'
-        }
+        name: 'Java'
     }, {
         name: 'TiDB'
     }, {
@@ -166,5 +159,7 @@ var nodes = [
         name: 'Hadoop'
     }, {
         name: '数据存储技术'
+    }, {
+        name: 'Java RMI'
     }
 ];

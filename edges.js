@@ -213,6 +213,9 @@ var edges = [
         source: 'RPC',
         target: 'REST-RPC'
     }, {
+        source: 'RPC',
+        target: 'Java RMI'
+    }, {
         source: 'SOA',
         target: 'Web服务交互方案'
     }, {
@@ -227,5 +230,8 @@ var edges = [
     }, {
         source: '数据存储技术',
         target: '数据仓库'
+    }, {
+        source: 'Java',
+        target: 'Java RMI'
     }
 ];
