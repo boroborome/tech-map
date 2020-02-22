@@ -4,6 +4,38 @@
        <meta charset="utf-8">
    </head>
    <body style="height: 100%; margin: 0">
+        <div>不同关系有不同的样式，如果有箭头一定是s指向t。
+            <table border="1">
+                <tr>
+                    <th>关系名称</th><th>说明</th><th>样式</th>
+                </tr>
+                <tr>
+                    <td>is</td>
+                    <td>是的关系。 s 是 t</td>
+                    <td>实线，三角箭头</td>
+                </tr>
+                <tr>
+                    <td>part</td>
+                    <td>组合关系。 s的一部分是t。可选部分也是一部分</td>
+                    <td>实线，圆头</td>
+                </tr>
+                <tr>
+                    <td>choice</td>
+                    <td>选项。 s的选项包含t。多个t中选择一个或多个的意思</td>
+                    <td>折线，圆头</td>
+                </tr>
+                <tr>
+                    <td>own</td>
+                    <td>拥有。 s拥有t</td>
+                    <td>虚线，方头</td>
+                </tr>
+                <tr>
+                    <td>unknown</td>
+                    <td></td>
+                    <td>虚线，无头</td>
+                </tr>
+            </table>
+        </div>
        <div id="container" style="height: 100%"></div>
        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
@@ -41,14 +73,53 @@ myChart.showLoading();
                 return node;
             });
 
-    // graphLinks = edges.map(function (edge, idx) {
-    //     source = nodeMap.get(edge.sn);
-    //     target = nodeMap.get(edge.tn);
-
-    //     edge.source = source?.id;
-    //     edge.target = target?.id;
-    //     return edge;
-    // });
+    unknownTypeInfo = {
+        symbol: ['none', 'none'],
+        lineStyle: {
+            type: 'dotted'
+        }
+    };
+    typeMap = new Map([[
+            'is', {
+                symbol: ['none', 'triangle'],
+                lineStyle: {
+                    type: 'solid'
+                }
+            }
+        ], [
+            'part', {
+                symbol: ['none', 'circle'],
+                lineStyle: {
+                    type: 'solid'
+                }
+            }
+        ], [
+            'choice', {
+                symbol: ['none', 'circle'],
+                lineStyle: {
+                    type: 'dashed'
+                }
+            }
+        ], [
+            'own', {
+                symbol: ['none', 'rect'],
+                lineStyle: {
+                    type: 'dotted'
+                }
+            }
+        ], [
+            'unknown', unknownTypeInfo
+        ]
+    ]);
+    graphLinks = edges.map(function (edge, idx) {
+        typeInfo = typeMap.get(edge.type);
+        if (typeInfo == null) {
+            typeInfo = unknownTypeInfo;
+        }
+        edge.symbol = typeInfo.symbol;
+        edge.lineStyle = typeInfo.lineStyle;
+        return edge;
+    });
     option = {
         legend: {
             data: ['HTMLElement', 'WebGL', 'SVG', 'CSS', 'Other']
@@ -71,7 +142,7 @@ myChart.showLoading();
                 gravity: 0.2
             },
             edgeSymbol: ['none', 'arrow'],
-            links: edges
+            links: graphLinks
         }]
     };
 

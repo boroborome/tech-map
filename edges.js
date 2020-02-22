@@ -1,237 +1,390 @@
+// 准则 s知道t，t可以不知道s
+// type属性枚举
+//  is: 是的关系。 s 是 t
+//  part:组合关系。 s的一部分是t。可选部分也是一部分
+//  choice: 选项。 s的选项包含t。多个t中选择一个或多个的意思
+//  own: 拥有。 s拥有t
+//  unknown: 未知
 var edges = [
     {
-        "source": "OLTP",
-        "target": "TiDB"
+        source: "OLTP",
+        type: 'unknown',
+        target: "TiDB"
     }, {
         source: '商业智能',
+        type: 'part',
         target: '决策层'
     }, {
         source: '商业智能',
+        type: 'part',
         target: '提供服务的方法'
     }, {
         source: '提供服务的方法',
+        type: 'part',
         target: '分析报表'
     }, {
         source: '提供服务的方法',
+        type: 'part',
         target: '数据湖'
     }, {
         source: '提供服务的方法',
+        type: 'part',
         target: '数据平台'
     }, {
         source: '商业智能',
+        type: 'part',
         target: '使用对象'
     }, {
-        source: '使用对象',
-        target: '数据开发者'
+        source: '数据开发者',
+        type: 'is',
+        target: '使用对象'
     }, {
-        source: '使用对象',
-        target: '数据技术人员'
+        source: '数据技术人员',
+        type: 'is',
+        target: '使用对象'
     }, {
-        source: '使用对象',
-        target: '数据分析师'
+        source: '数据分析师',
+        type: 'is',
+        target: '使用对象'
     }, {
         source: '商业智能',
+        type: 'part',
         target: '商业智能产出物'
     }, {
         source: '商业智能产出物',
+        type: 'part',
         target: '数据集'
     }, {
         source: '商业智能产出物',
+        type: 'part',
         target: 'Data Set'
     }, {
         source: '商业智能产出物',
+        type: 'part',
         target: 'Database as a Service'
     }, {
-        source: '商业智能产出物',
-        target: '使用对象'
-    }, {
         source: '数据中台',
+        type: 'part',
         target: '数据中台用户'
     }, {
         source: '数据中台用户',
+        type: 'choice',
         target: '数据用户'
     }, {
         source: '数据中台用户',
+        type: 'choice',
         target: '数据消费者'
     }, {
         source: '数据中台用户',
+        type: 'choice',
         target: '业务系统'
     }, {
         source: '数据中台',
-        target: '数据中台产品'
-    }, {
-        source: '数据中台用户',
+        type: 'part',
         target: '数据中台产品'
     }, {
         source: '数据中台产品',
+        type: 'choice',
         target: 'Data API'
     }, {
         source: '数据中台产品',
+        type: 'choice',
         target: '数据服务'
     }, {
-        source: 'Data Market',
-        target: '数据仓库'
+        source: '数据仓库',
+        type: 'is',
+        target: 'Data Market'
     }, {
         source: '阿里中台',
+        type: 'part',
         target: 'One Data'
     }, {
         source: '阿里中台',
+        type: 'part',
         target: 'One Entity'
     }, {
         source: '阿里中台',
+        type: 'part',
         target: 'One Service'
     }, {
-        source: 'RTP',
-        target: 'oRTP'
+        source: 'oRTP',
+        type: 'is',
+        target: 'RTP'
     }, {
-        source: 'RTP',
-        target: 'JRTP'
+        source: 'JRTP',
+        type: 'is',
+        target: 'RTP'
     }, {
-        source: '数据处理分类',
-        target: 'OLTP'
-    }, {
-        source: '数据处理分类',
-        target: 'OLAP'
+        source: 'OLTP',
+        type: 'is',
+        target: '数据处理类型'
     }, {
         source: 'OLAP',
-        target: '数据仓库'
+        type: 'is',
+        target: '数据处理类型'
+    }, {
+        source: '数据仓库',
+        type: 'unknown',
+        target: 'OLAP'
     }, {
         source: 'DDD',
+        type: 'unknown',
         target: 'Axon'
     }, {
         source: 'WebGL',
+        type: 'part',
         target: 'JavaScript'
     }, {
         source: 'WebGL',
+        type: 'part',
         target: 'HTML5'
     }, {
         source: 'WebGL',
+        type: 'part',
         target: 'OpenGL'
     }, {
-        source: 'OLAP',
-        target: 'ROLAP'
+        source: 'ROLAP',
+        type: 'is',
+        target: 'OLAP'
     }, {
-        source: 'OLAP',
-        target: 'MOLAP'
+        source: 'MOLAP',
+        type: 'is',
+        target: 'OLAP'
     }, {
-        source: 'OLAP',
-        target: 'HOLAP'
+        source: 'HOLAP',
+        type: 'is',
+        target: 'OLAP'
     }, {
         source: '阿里',
+        type: 'part',
         target: '阿里中台'
     }, {
         source: '阿里',
+        type: 'part',
         target: 'DRDS'
     }, {
         source: 'facebook',
+        type: 'own',
         target: 'Presto'
     }, {
-        source: 'ROLAP',
-        target: 'mondrian'
+        source: 'mondrian',
+        type: 'is',
+        target: 'ROLAP'
     }, {
-        source: 'ROLAP',
-        target: 'Presto'
+        source: 'Presto',
+        type: 'is',
+        target: 'ROLAP'
     }, {
-        source: 'ROLAP',
-        target: 'DRDS'
+        source: 'DRDS',
+        type: 'is',
+        target: 'ROLAP'
     }, {
-        source: 'MOLAP',
-        target: 'Kylin'
+        source: 'Kylin',
+        type: 'is',
+        target: 'MOLAP'
     }, {
-        source: 'MOLAP',
-        target: 'Lylin'
+        source: 'Lylin',
+        type: 'is',
+        target: 'MOLAP'
     }, {
-        source: 'MOLAP',
-        target: 'pinot'
+        source: 'pinot',
+        type: 'is',
+        target: 'MOLAP'
     }, {
-        source: 'MOLAP',
-        target: 'Druid'
+        source: 'Druid',
+        type: 'is',
+        target: 'MOLAP'
     }, {
         source: 'apache',
+        type: 'own',
         target: 'Kylin'
     }, {
         source: 'ebay',
+        type: 'own',
         target: 'Lylin'
     }, {
         source: 'linkedin',
+        type: 'own',
         target: 'pinot'
     }, {
-        source: 'MPP',
-        target: 'Presto'
-    }, {
-        source: 'MPP',
-        target: 'Impala'
-    }, {
-        source: 'MPP',
-        target: 'SparkSQL'
-    }, {
-        source: 'MPP',
-        target: 'Drill'
-    }, {
-        source: '预计算系统',
-        target: 'Druid'
-    }, {
-        source: '预计算系统',
-        target: 'Kylin'
-    }, {
-        source: '搜索引擎系统',
-        target: 'Elasticsearch'
-    }, {
-        source: 'OLAP',
-        target: 'OLAP引擎'
-    }, {
-        source: 'OLAP引擎',
+        source: 'Presto',
+        type: 'is',
         target: 'MPP'
     }, {
-        source: 'OLAP引擎',
+        source: 'Impala',
+        type: 'is',
+        target: 'MPP'
+    }, {
+        source: 'SparkSQL',
+        type: 'is',
+        target: 'MPP'
+    }, {
+        source: 'Drill',
+        type: 'is',
+        target: 'MPP'
+    }, {
+        source: 'Druid',
+        type: 'is',
         target: '预计算系统'
     }, {
-        source: 'OLAP引擎',
+        source: 'Kylin',
+        type: 'is',
+        target: '预计算系统'
+    }, {
+        source: 'Elasticsearch',
+        type: 'is',
         target: '搜索引擎系统'
     }, {
-        source: 'Web服务交互方案',
+        source: 'OLAP',
+        type: 'part',
+        target: 'OLAP引擎'
+    }, {
+        source: 'MPP',
+        type: 'is',
+        target: 'OLAP引擎'
+    }, {
+        source: '预计算系统',
+        type: 'is',
+        target: 'OLAP引擎'
+    }, {
+        source: '搜索引擎系统',
+        type: 'is',
+        target: 'OLAP引擎'
+    }, {
+        source: 'RPC',
+        type: 'is',
+        target: 'Web服务交互方案'
+    }, {
+        source: 'RESTful',
+        type: 'is',
+        target: 'Web服务交互方案'
+    }, {
+        source: 'XML-RPC',
+        type: 'is',
         target: 'RPC'
     }, {
-        source: 'Web服务交互方案',
-        target: 'RESTFul'
-    }, {
-        source: 'RPC',
+        source: 'SOAP',
+        type: 'is',
         target: 'XML-RPC'
     }, {
-        source: 'RPC',
-        target: 'SOAP'
+        source: 'JSON-RPC',
+        type: 'is',
+        target: 'RPC'
     }, {
-        source: 'RPC',
-        target: 'JSON-RPC'
+        source: 'CORBA',
+        type: 'is',
+        target: 'RPC'
     }, {
-        source: 'RPC',
-        target: 'CORBA'
+        source: 'Java RMI',
+        type: 'is',
+        target: 'RPC'
     }, {
-        source: 'RPC',
-        target: 'Java RMI'
-    }, {
-        source: 'RPC',
-        target: 'REST-RPC'
-    }, {
-        source: 'RPC',
-        target: 'Java RMI'
+        source: 'REST-RPC',
+        type: 'is',
+        target: 'RPC'
     }, {
         source: 'SOA',
+        type: 'part',
         target: 'Web服务交互方案'
     }, {
         source: '数据湖',
+        type: 'part',
         target: '数据沙箱'
     }, {
-        source: '数据湖',
-        target: 'Hadoop'
-    }, {
-        source: '数据存储技术',
+        source: 'Hadoop',
+        type: 'is',
         target: '数据湖'
     }, {
-        source: '数据存储技术',
-        target: '数据仓库'
+        source: '数据湖',
+        type: 'is',
+        target: '数据存储技术'
+    }, {
+        source: '数据仓库',
+        type: 'is',
+        target: '数据存储技术'
     }, {
         source: 'Java',
+        type: 'part',
         target: 'Java RMI'
+    }, {
+        source: 'Benchmark',
+        type: 'is',
+        target: 'HiBench'
+    }, {
+        source: 'HiBench',
+        type: 'part',
+        target: 'HiBench Support'
+    }, {
+        source: 'HiBench Support',
+        type: 'is',
+        target: 'Hadoop'
+    }, {
+        source: 'Spark',
+        type: 'is',
+        target: 'HiBench Support'
+    }, {
+        source: 'streaming workloads',
+        type: 'is',
+        target: 'HiBench Support'
+    }, {
+        source: 'Spark Streaming',
+        type: 'is',
+        target: 'streaming workloads'
+    }, {
+        source: 'Flink',
+        type: 'is',
+        target: 'streaming workloads'
+    }, {
+        source: 'Storm',
+        type: 'is',
+        target: 'streaming workloads'
+    }, {
+        source: 'Gearpump',
+        type: 'is',
+        target: 'streaming workloads'
+    }, {
+        source: 'JSON-WSP',
+        type: 'is',
+        target: 'RPC'
+    }, {
+        source: 'gRPC',
+        type: 'is',
+        target: 'RPC'
+    }, {
+        source: 'RESTful',
+        type: 'is',
+        target: 'REST'
+    }, {
+        source: 'Web Service',
+        type: 'choice',
+        target: 'Ajax'
+    }, {
+        source: 'Web Service',
+        type: 'choice',
+        target: 'REST'
+    }, {
+        source: 'Web Service',
+        type: 'choice',
+        target: 'JSON-RPC'
+    }, {
+        source: 'Web Service',
+        type: 'choice',
+        target: 'JSON-WSP'
+    }, {
+        source: 'Ajax',
+        type: 'choice',
+        target: 'SOAP'
+    }, {
+        source: 'Ajax',
+        type: 'choice',
+        target: 'JSON'
+    }, {
+        source: 'RPC',
+        type: 'is',
+        target: '请求响应协议'
+    }, {
+        source: 'REST',
+        type: 'is',
+        target: '请求响应协议'
     }
 ];

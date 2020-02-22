@@ -75,7 +75,7 @@ var nodes = [
     }, {
         name: 'OLTP'
     }, {
-        name: '数据处理分类'
+        name: '数据处理类型'
     }, {
         name: 'WebGL'
     }, {
@@ -143,7 +143,7 @@ var nodes = [
     }, {
         name: 'RPC'
     }, {
-        name: 'RESTFul'
+        name: 'RESTful'
     }, {
         name: 'JSON-RPC',
         url: 'https://www.jsonrpc.org/specification_v1'
@@ -161,5 +161,37 @@ var nodes = [
         name: '数据存储技术'
     }, {
         name: 'Java RMI'
+    }, {
+        name: 'Flink'
+    }, {
+        name: 'HiBench'
+    }, {
+        name: 'Benchmark'
+    }, {
+        name: 'HiBench Support'
+    }, {
+        name: 'Spark'
+    }, {
+        name: 'streaming workloads'
+    }, {
+        name: 'Spark Streaming'
+    }, {
+        name: 'Storm'
+    }, {
+        name: 'Gearpump'
+    }, {
+        name: 'JSON-WSP'
+    }, {
+        name: 'gRPC'
+    }, {
+        name: 'REST'
+    }, {
+        name: 'Web Service'
+    }, {
+        name: 'Ajax'
+    }, {
+        name: 'JSON'
+    }, {
+        name: '请求响应协议'
     }
 ];
