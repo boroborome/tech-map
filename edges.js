@@ -251,14 +251,6 @@ var edges = [
         type: 'is',
         target: 'OLAP引擎'
     }, {
-        source: 'RPC',
-        type: 'is',
-        target: 'Web服务交互方案'
-    }, {
-        source: 'RESTful',
-        type: 'is',
-        target: 'Web服务交互方案'
-    }, {
         source: 'XML-RPC',
         type: 'is',
         target: 'RPC'
@@ -282,10 +274,6 @@ var edges = [
         source: 'REST-RPC',
         type: 'is',
         target: 'RPC'
-    }, {
-        source: 'SOA',
-        type: 'part',
-        target: 'Web服务交互方案'
     }, {
         source: '数据湖',
         type: 'part',
@@ -379,12 +367,20 @@ var edges = [
         type: 'choice',
         target: 'JSON'
     }, {
-        source: 'RPC',
+        source: 'SOA',
+        type: 'part',
+        target: 'Service-Based Technology'
+    }, {
+        source: 'Web Service',
         type: 'is',
-        target: '请求响应协议'
+        target: 'Service-Based Technology'
     }, {
         source: 'REST',
         type: 'is',
-        target: '请求响应协议'
+        target: 'Service-Based Technology'
+    }, {
+        source: 'CORBA',
+        type: 'is',
+        target: 'Service-Based Technology'
     }
 ];

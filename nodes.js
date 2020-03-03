@@ -135,8 +135,6 @@ var nodes = [
     }, {
         name: 'OLAP引擎'
     }, {
-        name: 'Web服务交互方案'
-    }, {
         name: 'SOAP'
     }, {
         name: 'XML-RPC'
@@ -192,6 +190,33 @@ var nodes = [
     }, {
         name: 'JSON'
     }, {
-        name: '请求响应协议'
+        name: 'Service-Based Technology'
+    }, {
+        name: 'CORBA'
+    }, {
+        name: 'vue'
+    }, {
+        name: 'Robot Framework',
+        url: 'https://robotframework.org/'
+    }, {
+        name: 'Pulsar'
+    }, {
+        name: 'Flume'
+    }, {
+        name: 'Sqoop'
+    }, {
+        name: 'CDC'
+    }, {
+        name: 'DataX'
+    }, {
+        name: 'HDFS'
+    }, {
+        name: 'S3'
+    }, {
+        name: 'NoSql'
+    }, {
+        name: 'Neo4j'
+    }, {
+        name: 'Hive'
     }
 ];
