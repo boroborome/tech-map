@@ -1,157 +1,274 @@
 <!DOCTYPE html>
-<html style="height: 100%">
-   <head>
-       <meta charset="utf-8">
-   </head>
-   <body style="height: 100%; margin: 0">
-        <div>不同关系有不同的样式，如果有箭头一定是s指向t。
-            <table border="1">
+<html>
+<head>
+    <title>Code Map</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+        ctrl-panel {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+        }
+        filter-panel {
+            width: 90%;
+            float: left;
+        }
+        help-panel {
+            width: 10%;
+            float: left;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+        }
+
+        .tooltip .tooltiptext {
+            background-color: aliceblue;
+
+            width: 400px;
+            visibility: hidden;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+
+            /* 定位 */
+            position: absolute;
+            z-index: 1;
+            top: -5px;
+            right: 105%;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+        html,body{
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+<div id="container" style="height: 100%;"></div>
+<ctrl-panel>
+    <filter-panel>
+        Include:<input id="includeContent" type="text" onkeydown="checkEntry(event, refreshNodes)" style="width: 250px">
+        Exclude:<input id="excludeContent" type="text" onkeydown="checkEntry(event, refreshNodes)" style="width: 250px">
+        <input type="button" value="Filter" onclick="refreshNodes()"><br>
+        High Light:<input id="highLightContent" type="text" onkeydown="checkEntry(event, refreshHighLightNodes)" style="width: 250px">
+        <input type="button" value="High Light" onclick="refreshNodes()"><br>
+    </filter-panel>
+    <help-panel>
+        <div class="tooltip">(?)
+            <table border="1" class="tooltiptext">
                 <tr>
-                    <th>关系名称</th><th>说明</th><th>样式</th>
+                    <th>关系名称</th>
+                    <th>说明</th>
+                    <th>样式</th>
                 </tr>
                 <tr>
-                    <td>is</td>
-                    <td>是的关系。 s 是 t</td>
+                    <td>inherit</td>
+                    <td>继承关系</td>
                     <td>实线，三角箭头</td>
                 </tr>
                 <tr>
-                    <td>part</td>
-                    <td>组合关系。 s的一部分是t。可选部分也是一部分</td>
-                    <td>实线，圆头</td>
+                    <td>member</td>
+                    <td>成员、组成关系</td>
+                    <td>实线，箭头</td>
                 </tr>
                 <tr>
-                    <td>choice</td>
-                    <td>选项。 s的选项包含t。多个t中选择一个或多个的意思</td>
-                    <td>折线，圆头</td>
-                </tr>
-                <tr>
-                    <td>own</td>
-                    <td>拥有。 s拥有t</td>
-                    <td>虚线，方头</td>
+                    <td>reference</td>
+                    <td>引用关系</td>
+                    <td>虚线，箭头</td>
                 </tr>
                 <tr>
                     <td>unknown</td>
                     <td></td>
-                    <td>虚线，无头</td>
+                    <td>点虚线，箭头</td>
                 </tr>
             </table>
         </div>
-       <div id="container" style="height: 100%"></div>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
-       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
-       <script type="text/javascript" src="categories.js"></script>
-       <script type="text/javascript" src="edges.js"></script>
-       <script type="text/javascript" src="nodes.js"></script>
-       <script type="text/javascript">
-var dom = document.getElementById("container");
-var myChart = echarts.init(dom);
-var app = {};
-option = null;
-myChart.showLoading();
+    </help-panel>
+</ctrl-panel>
 
-
-// var xobj = new XMLHttpRequest();
-// xobj.overrideMimeType("application/json");
-// xobj.open('GET', 'webkit-dep.json', true);
-// xobj.onreadystatechange = function() {
-//     if (xobj.readyState != 4 || xobj.status != "200") {
-//         return;
-//     }
-    
-//     webkitDep = JSON.parse(xobj.responseText);
-    myChart.hideLoading();
-
-    nodeMap = new Map();
-    graphData = nodes.map(function (node, idx) {
-                node.id = node.name;
-                // nodeMap.set(node.name, node);
-                return node;
-            });
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl/dist/echarts-gl.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat/dist/ecStat.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts/dist/extension/bmap.min.js"></script>
+<script type="text/javascript" src="categories.js"></script>
+<script type="text/javascript" src="edges.js"></script>
+<script type="text/javascript" src="nodes.js"></script>
+<script type="text/javascript">
+    function checkEntry(event, action) {
+        if (event.keyCode == 13) {
+            action();
+        }
+    }
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
 
     unknownTypeInfo = {
-        symbol: ['none', 'none'],
+        symbol: ['none', 'arrow'],
         lineStyle: {
             type: 'dotted'
         }
     };
     typeMap = new Map([[
-            'is', {
-                symbol: ['none', 'triangle'],
-                lineStyle: {
-                    type: 'solid'
-                }
+        'inherit', {
+            symbol: ['none', 'triangle'],
+            lineStyle: {
+                type: 'solid'
             }
-        ], [
-            'part', {
-                symbol: ['none', 'circle'],
-                lineStyle: {
-                    type: 'solid'
-                }
-            }
-        ], [
-            'choice', {
-                symbol: ['none', 'circle'],
-                lineStyle: {
-                    type: 'dashed'
-                }
-            }
-        ], [
-            'own', {
-                symbol: ['none', 'rect'],
-                lineStyle: {
-                    type: 'dotted'
-                }
-            }
-        ], [
-            'unknown', unknownTypeInfo
-        ]
-    ]);
-    graphLinks = edges.map(function (edge, idx) {
-        typeInfo = typeMap.get(edge.type);
-        if (typeInfo == null) {
-            typeInfo = unknownTypeInfo;
         }
-        edge.symbol = typeInfo.symbol;
-        edge.lineStyle = typeInfo.lineStyle;
-        return edge;
-    });
-    option = {
-        legend: {
-            data: ['HTMLElement', 'WebGL', 'SVG', 'CSS', 'Other']
-        },
-        series: [{
-            type: 'graph',
-            layout: 'force',
-            animation: false,
-            label: {
-                show: true,
-                position: 'right',
-                formatter: '{b}'
-            },
-            draggable: true,
-            data: graphData,
-            categories: categories,
-            force: {
-                edgeLength: 50,
-                repulsion: 200,
-                gravity: 0.2
-            },
-            edgeSymbol: ['none', 'arrow'],
-            links: graphLinks
-        }]
-    };
+    ], [
+        'member', {
+            symbol: ['none', 'arrow'],
+            lineStyle: {
+                type: 'solid'
+            }
+        }
+    ], [
+        'reference', {
+            symbol: ['none', 'arrow'],
+            lineStyle: {
+                type: 'dashed'
+            }
+        }
+    ], [
+        'unknown', unknownTypeInfo
+    ]
+    ]);
 
-    myChart.setOption(option);
-// };
-// xobj.send(null);
-// if (option && typeof option === "object") {
-//     myChart.setOption(option, true);
-// }
-       </script>
-   </body>
+    lastOption = null;
+    function refreshHighLightNodes() {
+        if (lastOption == null) {
+            refreshNodes();
+            return;
+        }
+        var highLightTexts = readTexts(highLightContent);
+        lastOption.series[0].data.forEach(node => {
+            configHighLight(node, highLightTexts)
+        });
+        myChart.setOption(lastOption);
+    }
+
+    function configHighLight(node, hightLightTexts) {
+        if (hightLightTexts != null && hightLightTexts.length > 0 && matchAny(node.id, hightLightTexts)) {
+            node.symbolSize = 20;
+        } else {
+            node.symbolSize = 10;
+        }
+    }
+
+    function matchAny(value, target) {
+        for (index = 0; index < target.length; index++) {
+            v = target[index];
+            if (value.indexOf(v) >= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function strMatch(value, includes, excludes) {
+        return (includes.length == 0
+            || matchAny(value, includes))
+            && (excludes.length == 0
+                || !matchAny(value, excludes));
+    }
+
+    function readTexts(ctrl) {
+        return ctrl.value
+            .replaceAll('.', '/')
+            .split(";")
+            .filter(a => a != "");
+    }
+
+    function refreshNodes() {
+        myChart.showLoading();
+
+        // nodeMap = new Map();
+        var includeTexts = readTexts(includeContent);
+        var excludeTexts = readTexts(excludeContent);
+        var highLightTexts = readTexts(highLightContent);
+        graphData = nodes.map(function (node) {
+            if (node.id == null) {
+                node.id = node.name;
+            }
+            return node;
+        })
+            .filter(function (node) {
+            return strMatch(node.id, includeTexts, excludeTexts);
+        });
+        graphData.forEach(node => {
+            configHighLight(node, highLightTexts)
+        });
+
+        graphLinks = edges.filter(function (edge) {
+            return strMatch(edge.source, includeTexts, excludeTexts)
+                && strMatch(edge.target, includeTexts, excludeTexts);
+        })
+            .map(function (edge, idx) {
+                typeInfo = typeMap.get(edge.type);
+                if (typeInfo == null) {
+                    typeInfo = unknownTypeInfo;
+                }
+                edge.symbol = typeInfo.symbol;
+                edge.lineStyle = typeInfo.lineStyle;
+                return edge;
+            });
+        option = createOption(graphData, graphLinks);
+
+        myChart.setOption(option);
+        myChart.hideLoading();
+        lastOption = option;
+    }
+
+    function createOption(graphData, graphLinks) {
+        return {
+            tooltip: {
+                show: true,
+                trigger: 'item',
+                enterable: true,
+                formatter: function (params, ticket, callback) {
+                    var data = params.data;
+                    if (data.id != null) {
+                        return data.id.replaceAll('/', '.');
+                    }
+                    return 'Source:' + data.source.replaceAll('/', '.')
+                        + '<br>Type:' + data.type
+                        + '<br>Target:' + data.target.replaceAll('/', '.') ;
+                }
+            },
+            legend: {
+                data: ['Other']
+            },
+            series: [{
+                type: 'graph',
+                layout: 'force',
+                animation: false,
+                label: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{b}'
+                },
+                draggable: true,
+                data: graphData,
+                categories: categories,
+                force: {
+                    edgeLength: 100,
+                    repulsion: 400,
+                    gravity: 0.1
+                },
+                roam: true,
+                edgeSymbol: ['none', 'arrow'],
+                links: graphLinks
+            }]
+        };
+    }
+</script>
+</body>
 </html>

@@ -218,5 +218,13 @@ var nodes = [
         name: 'Neo4j'
     }, {
         name: 'Hive'
+    }, {
+        name: 'keymetrics'
+    }, {
+        name: 'Node.js'
+    }, {
+        name: 'Eureka'
+    }, {
+        name: 'Zuul'
     }
 ];
